@@ -1,0 +1,58 @@
+@page "/Customer"
+@using BlazorApp.Client.Services
+@using BlazorApp.Shared.Models
+
+<h3>Customer</h3>
+
+Preview customers
+
+<p> @_resp.Count() </p>
+
+@if (_customers == null)
+{
+    <p>
+        <em>Loading...</em>
+    </p>
+}
+else
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Company Name</th>
+            <th>City</th>
+            <th>Region</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var customer in _customers)
+        {
+            <tr>
+                <td>@customer.Id</td>
+                <td>@customer.CompanyName</td>
+                <td>@customer.City</td>
+                <td>@customer.Region</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<BlazorApp.Shared.Models.Customer>? _customers;
+    private IEnumerable<Resp> _resp = [];
+    
+    private const string ApiUrl = "https://localhost:5001/";
+
+    [Inject] public CustomerApiService CustomerApiService { get; set; }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        // _customers = await HttpClient.GetFromJsonAsync<IEnumerable<CustomerModel>>($"{ApiUrl}customers");
+        // _customers = await CustomerApiService.GetCustomersAsync() ?? [];
+        _resp = await CustomerApiService.GetData();
+    }
+    
+
+}

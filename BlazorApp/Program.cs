@@ -1,5 +1,8 @@
+using BlazorApp.Client.Services;
 using BlazorApp.Components;
 using BlazorApp.Data;
+using BlazorApp.Interfaces;
+using BlazorApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +11,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddHttpClient();
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<CustomerApiService>();
 
 var app = builder.Build();
 

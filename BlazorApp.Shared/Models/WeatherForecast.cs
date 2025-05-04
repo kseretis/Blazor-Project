@@ -1,4 +1,4 @@
-﻿namespace BlazorApp.Data
+﻿namespace BlazorApp.Shared.Models
 {
     public class WeatherForecast
     {
