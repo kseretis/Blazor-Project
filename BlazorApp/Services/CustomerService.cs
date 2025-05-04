@@ -5,27 +5,27 @@ namespace BlazorApp.Services;
 
 public class CustomerService : ICustomerService
 {
+    public async Task AddCustomerAsync(Customer customer)
+    {
+        throw new NotImplementedException();
+    }
+    
     public async Task<IEnumerable<Customer>> GetCustomersAsync()
     {
         return await GetCustomersDummy();
     }
 
-    public async Task<Customer> GetCustomerAsync(int id)
+    public async Task<Customer?> GetCustomerAsync(string id)
     {
         throw new NotImplementedException();
     }
-
-    public async Task AddCustomerAsync(Customer customer)
-    {
-        throw new NotImplementedException();
-    }
-
+    
     public async Task<Customer> UpdateCustomerAsync(Customer customer)
     {
         throw new NotImplementedException();
     }
 
-    public async Task DeleteCustomerAsync(int id)
+    public async Task DeleteCustomerAsync(string id)
     {
         throw new NotImplementedException();
     }

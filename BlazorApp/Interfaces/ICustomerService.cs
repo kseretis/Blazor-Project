@@ -4,9 +4,9 @@ namespace BlazorApp.Interfaces;
 
 public interface ICustomerService
 {
-    Task<IEnumerable<CustomerModel>> GetCustomersAsync();
-    Task<CustomerModel> GetCustomerAsync(int id);
     Task AddCustomerAsync(CustomerModel customer);
+    Task<IEnumerable<CustomerModel>> GetCustomersAsync();
+    Task<CustomerModel?> GetCustomerAsync(string id);
     Task<CustomerModel> UpdateCustomerAsync(CustomerModel customer);
-    Task DeleteCustomerAsync(int id);
+    Task DeleteCustomerAsync(string id);
 }
