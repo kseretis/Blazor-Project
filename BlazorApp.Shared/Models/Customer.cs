@@ -1,8 +1,13 @@
-﻿namespace BlazorApp.Shared.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BlazorApp.Shared.Models
 {
+    [Table("Customers")]
     public class Customer
     {
-        public string? Id { get; set; }
+        [Key]
+        public required string Id { get; init; }
         public string? CompanyName { get; set; }
         public string? ContactName { get; set; }
         public string? Address { get; set; }

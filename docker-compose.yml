@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:latest
+    container_name: sqlserver
+    environment:
+      SA_PASSWORD: "YourStrongPassword123"  # IMPORTANT: Change this!
+      ACCEPT_EULA: "1"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: [ "CMD", "sqlcmd", "-S", "localhost,1433", "-U", "sa", "-P", "${SA_PASSWORD}", "-Q", "SELECT 1;" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  sqlserver_data:

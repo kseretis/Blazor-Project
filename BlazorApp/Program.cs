@@ -2,21 +2,24 @@ using BlazorApp.Client.Services;
 using BlazorApp.Components;
 using BlazorApp.Data;
 using BlazorApp.Interfaces;
+using BlazorApp.Repositories;
 using BlazorApp.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var services = builder.Services;
+
 // Add services to the container.
-builder.Services.AddRazorComponents()
+services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddHttpClient();
-builder.Services.AddSingleton<WeatherForecastService>();
-builder.Services.AddScoped<ICustomerService, CustomerService>();
-builder.Services.AddScoped<CustomerApiService>();
+ConfigureDatabase();
+ConfigureRepositories();
+ConfigureServices();
 
-builder.Services.AddControllers();
+services.AddControllers();
 
 var app = builder.Build();
 
@@ -44,3 +47,23 @@ app.MapRazorComponents<App>()
     .AddAdditionalAssemblies(typeof(BlazorApp.Client._Imports).Assembly);
 
 app.Run();
+
+
+void ConfigureDatabase()
+{
+    builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+}
+
+void ConfigureRepositories()
+{
+    services.AddScoped<CustomerRepository>();
+}
+
+void ConfigureServices()
+{
+    services.AddHttpClient();
+    services.AddSingleton<WeatherForecastService>();
+    services.AddScoped<ICustomerService, CustomerService>();
+    services.AddScoped<CustomerApiService>();
+}
+

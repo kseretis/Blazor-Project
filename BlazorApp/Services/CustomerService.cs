@@ -1,10 +1,19 @@
 using BlazorApp.Interfaces;
+using BlazorApp.Repositories;
 using BlazorApp.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Services;
 
 public class CustomerService : ICustomerService
 {
+    private readonly CustomerRepository _customerRepository;
+    
+    public CustomerService(CustomerRepository customerRepository)
+    {
+        _customerRepository = customerRepository;
+    }
+    
     public async Task AddCustomerAsync(Customer customer)
     {
         throw new NotImplementedException();
@@ -12,7 +21,7 @@ public class CustomerService : ICustomerService
     
     public async Task<IEnumerable<Customer>> GetCustomersAsync()
     {
-        return await GetCustomersDummy();
+        return await _customerRepository.GetAllCustomersAsync();
     }
 
     public async Task<Customer?> GetCustomerAsync(string id)
