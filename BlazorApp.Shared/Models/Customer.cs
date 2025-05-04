@@ -7,7 +7,7 @@ namespace BlazorApp.Shared.Models
     public class Customer
     {
         [Key]
-        public required string Id { get; init; }
+        public required int Id { get; init; }
         public string? CompanyName { get; set; }
         public string? ContactName { get; set; }
         public string? Address { get; set; }

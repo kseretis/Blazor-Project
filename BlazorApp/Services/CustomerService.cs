@@ -45,7 +45,7 @@ public class CustomerService : ICustomerService
         
         return Enumerable.Range(1, 5).Select(index => new Customer()
         {
-            Id = index.ToString(),
+            Id = index,
             CompanyName = "Company" + index,
             ContactName = "Contact" + index,
             Address = "Address" + index,
