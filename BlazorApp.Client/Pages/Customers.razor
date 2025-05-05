@@ -4,8 +4,11 @@
 @using BlazorApp.Shared.Dtos
 
 @inject CustomerApiService CustomerApiService;
+@inject ModalService ModalService;
 
-<h3>Customer</h3>
+<h3>Customers</h3>
+
+
 
 @* @if (_customers == null) *@
 @* { *@
@@ -15,58 +18,98 @@
 @* } *@
 @* else *@
 @* { *@
-    <Grid TItem="CustomerDto"
-          Class="table table-hover table-bordered table-striped"
-          DataProvider="CustomersDataProvider"
-          AllowFiltering="true"
-          AllowPaging="true"
-          PageSize="10"
-          AllowSorting="true"
-          AllowSelection="false"
-          SelectionMode="GridSelectionMode.Multiple"
-          Responsive="true">
+<Grid TItem="CustomerDto"
+      Class="table table-hover table-bordered table-striped"
+      DataProvider="CustomersDataProvider"
+      AllowFiltering="true"
+      AllowPaging="true"
+      PageSize="10"
+      AllowSorting="true"
+      AllowSelection="false"
+      SelectionMode="GridSelectionMode.Single"
+      AllowRowClick="true"
+      OnRowClick="@((args) => OpenUpdateCustomerModal(args.Item))"
+      Responsive="true"
+      EmptyText="No records to display">
        
-        <GridColumns>
-            <GridColumn TItem="CustomerDto" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id">
-                @context.Id
-            </GridColumn>
-            <GridColumn TItem="CustomerDto" HeaderText="CompanyName" PropertyName="CompanyName" SortKeySelector="item => item.CompanyName">
-                @context.CompanyName
-            </GridColumn>
-            <GridColumn TItem="CustomerDto" HeaderText="ContactName" PropertyName="ContactName" SortKeySelector="item => item.ContactName">
-                @context.ContactName
-            </GridColumn>
-            <GridColumn TItem="CustomerDto" HeaderText="Address" PropertyName="Address" SortKeySelector="item => item.Address">
-                @context.Address
-            </GridColumn>
-            <GridColumn TItem="CustomerDto" HeaderText="City" PropertyName="City" SortKeySelector="item => item.City">
-                @context.City
-            </GridColumn>
-            <GridColumn  TItem="CustomerDto" HeaderText="Region" PropertyName="Region" SortKeySelector="item => item.Region">
-                @context.Region"
-            </GridColumn>
-            <GridColumn TItem="CustomerDto" HeaderText="PostalCode" PropertyName="PostalCode" SortKeySelector="item => item.PostalCode">
-                @context.PostalCode
-            </GridColumn>
-            <GridColumn TItem="CustomerDto" HeaderText="Country" PropertyName="Country" SortKeySelector="item => item.Country">
-                @context.Country
-            </GridColumn>
-            <GridColumn TItem="CustomerDto" HeaderText="Phone" PropertyName="Phone" SortKeySelector="item => item.Phone">
-                @context.Phone
-            </GridColumn>
-        </GridColumns>
-    </Grid>
+    <GridColumns>
+        <GridColumn TItem="CustomerDto" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id">
+            @context.Id
+        </GridColumn>
+        <GridColumn TItem="CustomerDto" HeaderText="CompanyName" PropertyName="CompanyName" SortKeySelector="item => item.CompanyName">
+            @context.CompanyName
+        </GridColumn>
+        <GridColumn TItem="CustomerDto" HeaderText="ContactName" PropertyName="ContactName" SortKeySelector="item => item.ContactName">
+            @context.ContactName
+        </GridColumn>
+        <GridColumn TItem="CustomerDto" HeaderText="Address" PropertyName="Address" SortKeySelector="item => item.Address">
+            @context.Address
+        </GridColumn>
+        <GridColumn TItem="CustomerDto" HeaderText="City" PropertyName="City" SortKeySelector="item => item.City">
+            @context.City
+        </GridColumn>
+        <GridColumn  TItem="CustomerDto" HeaderText="Region" PropertyName="Region" SortKeySelector="item => item.Region">
+            @context.Region
+        </GridColumn>
+        <GridColumn TItem="CustomerDto" HeaderText="PostalCode" PropertyName="PostalCode" SortKeySelector="item => item.PostalCode">
+            @context.PostalCode
+        </GridColumn>
+        <GridColumn TItem="CustomerDto" HeaderText="Country" PropertyName="Country" SortKeySelector="item => item.Country">
+            @context.Country
+        </GridColumn>
+        <GridColumn TItem="CustomerDto" HeaderText="Phone" PropertyName="Phone" SortKeySelector="item => item.Phone">
+            @context.Phone
+        </GridColumn>
+        <GridColumn TItem="CustomerDto" HeaderText="Actions" PropertyName="Actions" SortKeySelector="item => item.Id" Sortable="false" Filterable="false">
+            <Button Color="ButtonColor.Danger" Outline="true" @onclick="@(() => ShowDeleteCustomerConfirmationDialog(@context.Id))"><Icon Name="IconName.Trash" /></Button>
+        </GridColumn>
+    </GridColumns>
+</Grid>
+
+<UpdateCustomerModal @ref="UpdateCustomerModal" OnSave="OnUpdateCustomer"/>
+
+<ConfirmDialog @ref="DeleteCustomerConfirmDialog" />
 
 @code {
-    private IEnumerable<CustomerDto> CustomersDto { get; set; } = default!;
-
+    private IEnumerable<CustomerDto> CustomersDto { get; set; } = [];
+    private UpdateCustomerModal UpdateCustomerModal { get; set; } = null!;
+    private ConfirmDialog DeleteCustomerConfirmDialog { get; set; }= null!;
+    
     private async Task<GridDataProviderResult<CustomerDto>> CustomersDataProvider(GridDataProviderRequest<CustomerDto> request)
     {
-        if (CustomersDto is null || !CustomersDto.Any())
-        {
-            CustomersDto = await CustomerApiService.GetCustomersAsync();
-        }
-
+        CustomersDto = await CustomerApiService.GetCustomersAsync();
+        
         return await Task.FromResult(request.ApplyTo(CustomersDto));
+    }
+    
+    private void OpenUpdateCustomerModal(CustomerDto customerDto)
+    {
+        UpdateCustomerModal!.CustomerDto = customerDto;
+        UpdateCustomerModal.Show();
+    }
+    
+    private async Task OnUpdateCustomer()
+    {
+        CustomersDto = await CustomerApiService.GetCustomersAsync();
+        StateHasChanged();
+    }
+    
+    private async Task ShowDeleteCustomerConfirmationDialog(int? id)
+    {
+        var options = new ConfirmDialogOptions { Size = DialogSize.Small };
+
+        var confirmation = await DeleteCustomerConfirmDialog.ShowAsync(
+            title: "Delete Customer",
+            message1: $"Are you sure you want to delete customer with ID {id} ?",
+            confirmDialogOptions: options);
+
+        if (!confirmation)
+        {
+            return;
+        }
+        
+        await CustomerApiService.DeleteCustomerAsync(id!.Value);
+        CustomersDto = await CustomerApiService.GetCustomersAsync();
+        StateHasChanged(); 
     }
 }

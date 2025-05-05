@@ -20,9 +20,10 @@ public class CustomerApiService
         _logger = logger;
     }
     
-    public async Task<IEnumerable<CustomerDto>?> GetCustomersAsync()
+    public async Task<IEnumerable<CustomerDto>> GetCustomersAsync()
     {
-        return await HttpClient.GetFromJsonAsync<IEnumerable<CustomerDto>>($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}");
+        return await HttpClient.GetFromJsonAsync<IEnumerable<CustomerDto>>(
+            $"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}") ?? [];
     }
 
     public async Task<CustomerDto?> GetCustomerAsync(string id)
@@ -50,7 +51,7 @@ public class CustomerApiService
         throw new HttpRequestException($"Error: {response.StatusCode}, Details: {error}");
     }
     
-    public async Task DeleteCustomerAsync(string id)
+    public async Task DeleteCustomerAsync(int id)
     {
         var response = await HttpClient.DeleteAsync($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}/{id}");
 
