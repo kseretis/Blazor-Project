@@ -3,7 +3,7 @@
 
 @inject CustomerApiService CustomerApiService;
 
-<div class="modal" style="display: @(IsVisible ? "block" : "none");">
+<div class="modal" style="display: @(IsVisible ? "block" : "none"); background-color: rgba(0, 0, 0, 0.5);">
     <div class="modal-dialog">
         <div class="modal-content">
             <EditForm Model="CustomerDto" FormName="newCustomerForm" OnValidSubmit="Save">
