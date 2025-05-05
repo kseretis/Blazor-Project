@@ -1,4 +1,4 @@
-using BlazorApp.Shared.Models;
+using BlazorApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Data;

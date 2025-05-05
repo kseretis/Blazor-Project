@@ -1,12 +1,12 @@
-using CustomerModel = BlazorApp.Shared.Models.Customer;
+using BlazorApp.Models;
 
 namespace BlazorApp.Interfaces;
 
 public interface ICustomerService
 {
-    Task AddCustomerAsync(CustomerModel customer);
-    Task<IEnumerable<CustomerModel>> GetCustomersAsync();
-    Task<CustomerModel?> GetCustomerAsync(int id);
-    Task UpdateCustomerAsync(CustomerModel customer);
+    Task AddCustomerAsync(Customer customer);
+    Task<IEnumerable<Customer>> GetCustomersAsync();
+    Task<Customer?> GetCustomerAsync(int id);
+    Task UpdateCustomerAsync(Customer customer);
     Task<bool> DeleteCustomerAsync(int id);
 }

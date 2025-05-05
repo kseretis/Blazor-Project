@@ -1,5 +1,5 @@
 using BlazorApp.Data;
-using BlazorApp.Shared.Models;
+using BlazorApp.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Repositories;

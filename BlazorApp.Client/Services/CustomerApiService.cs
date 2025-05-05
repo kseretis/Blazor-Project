@@ -1,8 +1,6 @@
 using System.Net.Http.Json;
-using System.Text;
-using System.Text.Json;
 using BlazorApp.Shared.Dtos;
-using CustomerModel = BlazorApp.Shared.Models.Customer;
+
 
 namespace BlazorApp.Client.Services;
 
@@ -22,14 +20,14 @@ public class CustomerApiService
         _logger = logger;
     }
     
-    public async Task<IEnumerable<CustomerModel>?> GetCustomersAsync()
+    public async Task<IEnumerable<CustomerDto>?> GetCustomersAsync()
     {
-        return await HttpClient.GetFromJsonAsync<IEnumerable<CustomerModel>>($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}");
+        return await HttpClient.GetFromJsonAsync<IEnumerable<CustomerDto>>($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}");
     }
 
-    public async Task<CustomerModel?> GetCustomerAsync(string id)
+    public async Task<CustomerDto?> GetCustomerAsync(string id)
     {
-        return await HttpClient.GetFromJsonAsync<CustomerModel>($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}/{id}");
+        return await HttpClient.GetFromJsonAsync<CustomerDto>($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}/{id}");
     }
     
     public async Task<bool> AddCustomerAsync(CustomerDto customerDto)
@@ -39,7 +37,7 @@ public class CustomerApiService
         return response.IsSuccessStatusCode;
     }
     
-    public async Task UpdateCustomerAsync(CustomerModel customer)
+    public async Task UpdateCustomerAsync(CustomerDto customer)
     {
         var response = await HttpClient.PutAsJsonAsync($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}", customer);
 

@@ -1,7 +1,6 @@
 using BlazorApp.Interfaces;
 using BlazorApp.Shared.Dtos;
 using BlazorApp.Shared.Extensions;
-using BlazorApp.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorApp.Controllers;
@@ -36,15 +35,15 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Customer>>> GetCustomersAsync()
+    public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomersAsync()
     {
         try
         {
             var customers = await _customerService.GetCustomersAsync();
-
+            
             if (customers.Any())
             {
-                return Ok(customers);
+                return Ok(customers.Select(c => c.ToCustomerDto()));
             }
             
             return NotFound("No customers found");
@@ -57,7 +56,7 @@ public class CustomerController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    public async Task<ActionResult<Customer>> GetCustomer(int id)
+    public async Task<ActionResult<CustomerDto>> GetCustomer(int id)
     {
         try
         {
@@ -65,7 +64,7 @@ public class CustomerController : ControllerBase
     
             if (customer is not null)
             {
-                return Ok(customer);
+                return Ok(customer.ToCustomerDto());
             }
             
             return NotFound($"Customer with id {id} not found");

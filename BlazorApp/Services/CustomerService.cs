@@ -1,6 +1,6 @@
 using BlazorApp.Interfaces;
+using BlazorApp.Models;
 using BlazorApp.Repositories;
-using BlazorApp.Shared.Models;
 
 namespace BlazorApp.Services;
 

@@ -15,6 +15,7 @@ services.AddRazorComponents()
     .AddInteractiveWebAssemblyComponents();
 
 services.AddLogging();
+services.AddBlazorBootstrap();
 
 ConfigureHttpClient();
 ConfigureDatabase();

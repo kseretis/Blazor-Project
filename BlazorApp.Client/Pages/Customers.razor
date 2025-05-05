@@ -1,0 +1,72 @@
+@page "/Customers"
+@rendermode InteractiveAuto
+@using BlazorApp.Client.Services
+@using BlazorApp.Shared.Dtos
+
+@inject CustomerApiService CustomerApiService;
+
+<h3>Customer</h3>
+
+@* @if (_customers == null) *@
+@* { *@
+@*     <p> *@
+@*         <em>Loading...</em> *@
+@*     </p> *@
+@* } *@
+@* else *@
+@* { *@
+    <Grid TItem="CustomerDto"
+          Class="table table-hover table-bordered table-striped"
+          DataProvider="CustomersDataProvider"
+          AllowFiltering="true"
+          AllowPaging="true"
+          PageSize="10"
+          AllowSorting="true"
+          AllowSelection="false"
+          SelectionMode="GridSelectionMode.Multiple"
+          Responsive="true">
+       
+        <GridColumns>
+            <GridColumn TItem="CustomerDto" HeaderText="Id" PropertyName="Id" SortKeySelector="item => item.Id">
+                @context.Id
+            </GridColumn>
+            <GridColumn TItem="CustomerDto" HeaderText="CompanyName" PropertyName="CompanyName" SortKeySelector="item => item.CompanyName">
+                @context.CompanyName
+            </GridColumn>
+            <GridColumn TItem="CustomerDto" HeaderText="ContactName" PropertyName="ContactName" SortKeySelector="item => item.ContactName">
+                @context.ContactName
+            </GridColumn>
+            <GridColumn TItem="CustomerDto" HeaderText="Address" PropertyName="Address" SortKeySelector="item => item.Address">
+                @context.Address
+            </GridColumn>
+            <GridColumn TItem="CustomerDto" HeaderText="City" PropertyName="City" SortKeySelector="item => item.City">
+                @context.City
+            </GridColumn>
+            <GridColumn  TItem="CustomerDto" HeaderText="Region" PropertyName="Region" SortKeySelector="item => item.Region">
+                @context.Region"
+            </GridColumn>
+            <GridColumn TItem="CustomerDto" HeaderText="PostalCode" PropertyName="PostalCode" SortKeySelector="item => item.PostalCode">
+                @context.PostalCode
+            </GridColumn>
+            <GridColumn TItem="CustomerDto" HeaderText="Country" PropertyName="Country" SortKeySelector="item => item.Country">
+                @context.Country
+            </GridColumn>
+            <GridColumn TItem="CustomerDto" HeaderText="Phone" PropertyName="Phone" SortKeySelector="item => item.Phone">
+                @context.Phone
+            </GridColumn>
+        </GridColumns>
+    </Grid>
+
+@code {
+    private IEnumerable<CustomerDto> CustomersDto { get; set; } = default!;
+
+    private async Task<GridDataProviderResult<CustomerDto>> CustomersDataProvider(GridDataProviderRequest<CustomerDto> request)
+    {
+        if (CustomersDto is null || !CustomersDto.Any())
+        {
+            CustomersDto = await CustomerApiService.GetCustomersAsync();
+        }
+
+        return await Task.FromResult(request.ApplyTo(CustomersDto));
+    }
+}
