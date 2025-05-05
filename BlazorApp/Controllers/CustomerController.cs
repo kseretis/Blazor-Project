@@ -1,4 +1,6 @@
 using BlazorApp.Interfaces;
+using BlazorApp.Shared.Dtos;
+using BlazorApp.Shared.Extensions;
 using BlazorApp.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,13 +10,29 @@ namespace BlazorApp.Controllers;
 [Route("api/[controller]")] 
 public class CustomerController : ControllerBase
 {
-    private readonly ILogger<CustomerController> logger;
-    private readonly ICustomerService customerService;
+    private readonly ILogger<CustomerController> _logger;
+    private readonly ICustomerService _customerService;
 
     public CustomerController(ILogger<CustomerController> logger, ICustomerService customerService)
     {
-        this.logger = logger;
-        this.customerService = customerService;
+        _logger = logger;
+        _customerService = customerService;
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> AddCustomer([FromBody] CustomerDto customerDto)
+    {
+        try
+        {
+            await _customerService.AddCustomerAsync(customerDto.ToCustomer());
+            
+            return Ok("Customer added successfully!");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Something went wrong!");
+            return StatusCode(500, "Something went wrong!");
+        }
     }
 
     [HttpGet]
@@ -22,7 +40,7 @@ public class CustomerController : ControllerBase
     {
         try
         {
-            var customers = await customerService.GetCustomersAsync();
+            var customers = await _customerService.GetCustomersAsync();
 
             if (customers.Any())
             {
@@ -33,18 +51,18 @@ public class CustomerController : ControllerBase
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Something went wrong!");
+            _logger.LogError(ex, "Something went wrong!");
             return StatusCode(500, "Something went wrong!");
         }
     }
     
     [HttpGet("{id}")]
-    public async Task<ActionResult<IEnumerable<Customer>>> GetCustomer(string id)
+    public async Task<ActionResult<Customer>> GetCustomer(int id)
     {
         try
         {
-            var customer = await customerService.GetCustomerAsync(id);
-
+            var customer = await _customerService.GetCustomerAsync(id);
+    
             if (customer is not null)
             {
                 return Ok(customer);
@@ -54,60 +72,45 @@ public class CustomerController : ControllerBase
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Something went wrong!");
+            _logger.LogError(ex, "Something went wrong!");
             return StatusCode(500, "Something went wrong!");
         }
     }
-
-    // FIXME
-    [HttpPost]
-    public async Task<ActionResult<Customer>> AddCustomer([FromBody] Customer customer)
-    {
-        try
-        {
-            await customerService.AddCustomerAsync(customer);
-
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Something went wrong!");
-            return StatusCode(500, "Something went wrong!");
-        }
-    }
-    
-    // FIXME
+	
     [HttpPut]
-    public async Task<ActionResult<Customer>> UpdateCustomer([FromBody] Customer customer)
+    public async Task<IActionResult> UpdateCustomer([FromBody] CustomerDto customerDto)
     {
         try
         {
-            await customerService.UpdateCustomerAsync(customer);
-
-            return Ok();
+            await _customerService.UpdateCustomerAsync(customerDto.ToCustomer());
+    
+            return Ok("Customer updated successfully!");
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Something went wrong!");
-            return StatusCode(500, "Something went wrong!");
-        }
-    }
-
-    // FIXME
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<Customer>> DeleteCustom(string id)
-    {
-        try
-        {
-            await customerService.DeleteCustomerAsync(id);
-            
-            return Ok();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Something went wrong!");
+            _logger.LogError(ex, "Something went wrong!");
             return StatusCode(500, "Something went wrong!");
         }
     }
     
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteCustomer(int id)
+    {
+        try
+        {
+            var response = await _customerService.DeleteCustomerAsync(id);
+
+            if (response)
+            {
+                return Ok();
+            }
+            
+            return NotFound($"Customer with id {id} not found");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Something went wrong!");
+            return StatusCode(500, "Something went wrong!");
+        }
+    }
 }

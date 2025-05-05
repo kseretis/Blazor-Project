@@ -7,7 +7,6 @@ using BlazorApp.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
-
 var services = builder.Services;
 
 // Add services to the container.
@@ -15,6 +14,9 @@ services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+services.AddLogging();
+
+ConfigureHttpClient();
 ConfigureDatabase();
 ConfigureRepositories();
 ConfigureServices();
@@ -59,9 +61,17 @@ void ConfigureRepositories()
     services.AddScoped<CustomerRepository>();
 }
 
+void ConfigureHttpClient()
+{
+    services.AddHttpClient("MyHttpClient", client =>
+    {
+        client.BaseAddress = new Uri(builder.Configuration["ASPNETCORE_URLS"]!); // localhostUrl
+        client.Timeout = TimeSpan.FromSeconds(30);
+    });
+}
+
 void ConfigureServices()
 {
-    services.AddHttpClient();
     services.AddSingleton<WeatherForecastService>();
     services.AddScoped<ICustomerService, CustomerService>();
     services.AddScoped<CustomerApiService>();

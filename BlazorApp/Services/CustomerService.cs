@@ -1,7 +1,6 @@
 using BlazorApp.Interfaces;
 using BlazorApp.Repositories;
 using BlazorApp.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Services;
 
@@ -16,7 +15,7 @@ public class CustomerService : ICustomerService
     
     public async Task AddCustomerAsync(Customer customer)
     {
-        throw new NotImplementedException();
+        await _customerRepository.CreateCustomer(customer);
     }
     
     public async Task<IEnumerable<Customer>> GetCustomersAsync()
@@ -24,37 +23,25 @@ public class CustomerService : ICustomerService
         return await _customerRepository.GetAllCustomersAsync();
     }
 
-    public async Task<Customer?> GetCustomerAsync(string id)
+    public async Task<Customer?> GetCustomerAsync(int id)
     {
-        throw new NotImplementedException();
+        return await _customerRepository.GetCustomerAsync(id);
     }
     
-    public async Task<Customer> UpdateCustomerAsync(Customer customer)
+    public async Task UpdateCustomerAsync(Customer customer)
     {
-        throw new NotImplementedException();
+        await _customerRepository.UpdateCustomerAsync(customer);
     }
 
-    public async Task DeleteCustomerAsync(string id)
+    public async Task<bool> DeleteCustomerAsync(int id)
     {
-        throw new NotImplementedException();
-    }
-
-    private static async Task<IEnumerable<Customer>> GetCustomersDummy()
-    {
-        await Task.Delay(500);
-        
-        return Enumerable.Range(1, 5).Select(index => new Customer()
+        var customer = await _customerRepository.GetCustomerAsync(id);
+        if (customer is null)
         {
-            Id = index,
-            CompanyName = "Company" + index,
-            ContactName = "Contact" + index,
-            Address = "Address" + index,
-            City = "City" + index,
-            Region = "Region" + index,
-            PostalCode = "PostalCode" + index,
-            Country = "Country" + index,
-            Phone = "Phone" + index
-
-        });
+            return false;
+        }
+        
+        await _customerRepository.DeleteCustomerAsync(customer);
+        return true;
     }
 }

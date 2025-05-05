@@ -1,47 +1,47 @@
 using System.Net.Http.Json;
-using BlazorApp.Shared.Models;
+using System.Text;
+using System.Text.Json;
+using BlazorApp.Shared.Dtos;
 using CustomerModel = BlazorApp.Shared.Models.Customer;
 
 namespace BlazorApp.Client.Services;
 
 public class CustomerApiService
 {
-    private const string ApiUrl = "http://localhost:5217/api"; // TODO replace with base url   
-    private const string CustomerApiSuffix = "/Customer";
-    private readonly HttpClient _httpClient;
+    private const string ApiPrefixUrl = "api/";
+    private const string CustomerApiSuffix = "Customer";
 
-    public CustomerApiService(HttpClient httpClient)
+    private readonly ILogger<CustomerApiService> _logger;
+    private readonly IHttpClientFactory _httpClientFactory;
+    private HttpClient HttpClient => _httpClientFactory.CreateClient("MyHttpClient");
+    private string BaseUrl => HttpClient.BaseAddress!.ToString();
+    
+    public CustomerApiService(IHttpClientFactory httpClientFactory, ILogger<CustomerApiService> logger)
     {
-        _httpClient = httpClient;
+        _httpClientFactory = httpClientFactory;
+        _logger = logger;
     }
     
     public async Task<IEnumerable<CustomerModel>?> GetCustomersAsync()
     {
-        return await _httpClient.GetFromJsonAsync<IEnumerable<CustomerModel>>($"{ApiUrl}{CustomerApiSuffix}");
+        return await HttpClient.GetFromJsonAsync<IEnumerable<CustomerModel>>($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}");
     }
 
     public async Task<CustomerModel?> GetCustomerAsync(string id)
     {
-        return await _httpClient.GetFromJsonAsync<CustomerModel>($"{ApiUrl}{CustomerApiSuffix}/{id}");
+        return await HttpClient.GetFromJsonAsync<CustomerModel>($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}/{id}");
     }
     
-    public async Task AddCustomerAsync(CustomerModel customer)
+    public async Task<bool> AddCustomerAsync(CustomerDto customerDto)
     {
-        var response = await _httpClient.PostAsJsonAsync($"{ApiUrl}{CustomerApiSuffix}", customer);
+        var response = await HttpClient.PostAsJsonAsync($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}", customerDto);
 
-        if (response.IsSuccessStatusCode)
-        {
-            return;
-        }
-        
-        var error = await response.Content.ReadAsStringAsync();
-        throw new HttpRequestException($"Error: {response.StatusCode}, Details: {error}");
-        
+        return response.IsSuccessStatusCode;
     }
     
     public async Task UpdateCustomerAsync(CustomerModel customer)
     {
-        var response = await _httpClient.PutAsJsonAsync($"{ApiUrl}{CustomerApiSuffix}", customer);
+        var response = await HttpClient.PutAsJsonAsync($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}", customer);
 
         if (response.IsSuccessStatusCode)
         {
@@ -54,7 +54,7 @@ public class CustomerApiService
     
     public async Task DeleteCustomerAsync(string id)
     {
-        var response = await _httpClient.DeleteAsync($"{ApiUrl}{CustomerApiSuffix}/{id}");
+        var response = await HttpClient.DeleteAsync($"{BaseUrl}{ApiPrefixUrl}{CustomerApiSuffix}/{id}");
 
         if (response.IsSuccessStatusCode)
         {

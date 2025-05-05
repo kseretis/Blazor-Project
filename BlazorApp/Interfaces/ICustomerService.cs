@@ -6,7 +6,7 @@ public interface ICustomerService
 {
     Task AddCustomerAsync(CustomerModel customer);
     Task<IEnumerable<CustomerModel>> GetCustomersAsync();
-    Task<CustomerModel?> GetCustomerAsync(string id);
-    Task<CustomerModel> UpdateCustomerAsync(CustomerModel customer);
-    Task DeleteCustomerAsync(string id);
+    Task<CustomerModel?> GetCustomerAsync(int id);
+    Task UpdateCustomerAsync(CustomerModel customer);
+    Task<bool> DeleteCustomerAsync(int id);
 }

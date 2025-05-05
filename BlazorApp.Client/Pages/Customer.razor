@@ -1,5 +1,6 @@
 @page "/Customer"
 @using BlazorApp.Client.Services
+
 @inject CustomerApiService CustomerApiService;
 
 <h3>Customer</h3>
@@ -49,7 +50,7 @@ else
 
 @code {
     private IEnumerable<BlazorApp.Shared.Models.Customer>? _customers;
-    
+
     protected override async Task OnInitializedAsync()
     {
         _customers = await CustomerApiService.GetCustomersAsync() ?? [];
