@@ -5,7 +5,11 @@
 
 <h3>Customers</h3>
 
-@if (!CustomersDto.Any())
+@if (IsExceptionAlertVisible)
+{
+    <Alert Color="AlertColor.Danger"> Error: @ErrorMessage </Alert>
+} 
+else @if (!CustomersDto.Any())
 {
     <p>
         <em>Loading...</em>
@@ -64,7 +68,7 @@ else
     </Grid>
 }
 
-<UpdateCustomerModal @ref="UpdateCustomerModal" OnSave="OnUpdateCustomer"/>
+<UpdateCustomerModal @ref="UpdateCustomerModal" OnSave="UpdateCustomers"/>
 
 <ConfirmDialog @ref="DeleteCustomerConfirmDialog" />
 
@@ -72,11 +76,12 @@ else
     private IEnumerable<CustomerDto> CustomersDto { get; set; } = [];
     private UpdateCustomerModal UpdateCustomerModal { get; set; } = null!;
     private ConfirmDialog DeleteCustomerConfirmDialog { get; set; }= null!;
-
-    
+    private bool IsExceptionAlertVisible { get; set; }
+    private string ErrorMessage { get; set; } = string.Empty;
+ 
     protected override async Task OnInitializedAsync()
     {
-        CustomersDto = await CustomerApiService.GetCustomersAsync();
+        await UpdateCustomers();
     }
     
     private void OpenUpdateCustomerModal(CustomerDto customerDto)
@@ -85,9 +90,16 @@ else
         UpdateCustomerModal.Show();
     }
     
-    private async Task OnUpdateCustomer()
+    private async Task UpdateCustomers()
     {
-        CustomersDto = await CustomerApiService.GetCustomersAsync();
+        try
+        {
+            CustomersDto = await CustomerApiService.GetCustomersAsync();
+        } catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            IsExceptionAlertVisible = true;
+        }
     }
     
     private async Task ShowDeleteCustomerConfirmationDialog(int? id)
@@ -103,8 +115,16 @@ else
         {
             return;
         }
-        
-        await CustomerApiService.DeleteCustomerAsync(id!.Value);
-        CustomersDto = await CustomerApiService.GetCustomersAsync();
+
+        try
+        {
+            await CustomerApiService.DeleteCustomerAsync(id!.Value);
+            CustomersDto = await CustomerApiService.GetCustomersAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+            IsExceptionAlertVisible = true;
+        }
     }
 }

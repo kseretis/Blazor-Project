@@ -1,25 +1,18 @@
 @page "/newcustomer"
 @rendermode InteractiveAuto
-
-@using BlazorApp.Client.Services
 @using BlazorApp.Shared.Dtos
-
 @inject CustomerApiService CustomerApiService;
 
 <h3>New Customer</h3>
 
-@if (Created)
+@if (IsCreatedAlertVisible)
 {
-    <div class="alert alert-success" role="alert" >
-        Customer successfully Created!
-    </div>
+    <Alert Color="AlertColor.Success">  Customer successfully Created! </Alert>
 }
 
-@if (ErrorOccured)
+@if (IsExceptionAlertVisible)
 {
-    <div class="alert alert-danger" role="alert" >
-        @ErrorMessage
-    </div>
+    <Alert Color="AlertColor.Danger"> Error: @ErrorMessage </Alert>
 }
 
 <EditForm Model="CustomerDto" FormName="newCustomerForm" OnValidSubmit="Submit">
@@ -77,28 +70,28 @@
     [SupplyParameterFromForm]
     private CustomerDto CustomerDto { get; set; } = new();
     
-    private bool Created { get; set; } 
-    private bool ErrorOccured { get; set; }
-    public string ErrorMessage { get; set; } = string.Empty;
+    private bool IsCreatedAlertVisible { get; set; } 
+    private bool IsExceptionAlertVisible { get; set; }
+    private string ErrorMessage { get; set; } = string.Empty;
     
-    public async void Submit(EditContext editContext)
+    public async Task Submit(EditContext editContext)
     {
         try
         {
             var response = await CustomerApiService.AddCustomerAsync(CustomerDto);
             if (response)
             {
-                Created = true;
+                IsCreatedAlertVisible = true;
                 CustomerDto = new();
             }
             else
             {
-                ErrorOccured = true;
+                IsExceptionAlertVisible = true;
             }
         }
         catch (Exception ex)
         {
-            ErrorOccured = true;
+            IsExceptionAlertVisible = true;
             ErrorMessage = ex.Message;
         }
         StateHasChanged();
