@@ -4,7 +4,6 @@
 @using BlazorApp.Shared.Dtos
 
 @inject CustomerApiService CustomerApiService;
-@inject ModalService ModalService;
 
 <h3>Customers</h3>
 
@@ -76,12 +75,27 @@
     private IEnumerable<CustomerDto> CustomersDto { get; set; } = [];
     private UpdateCustomerModal UpdateCustomerModal { get; set; } = null!;
     private ConfirmDialog DeleteCustomerConfirmDialog { get; set; }= null!;
+
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.Delay(50);
+    }
     
     private async Task<GridDataProviderResult<CustomerDto>> CustomersDataProvider(GridDataProviderRequest<CustomerDto> request)
     {
         if (!CustomersDto.Any())
         {
-            CustomersDto = await CustomerApiService.GetCustomersAsync();
+            try
+            {
+                CustomersDto = await CustomerApiService.GetCustomersAsync();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error");
+                
+            }
         }
         
         return await Task.FromResult(request.ApplyTo(CustomersDto));
@@ -89,7 +103,6 @@
     
     private void OpenUpdateCustomerModal(CustomerDto customerDto)
     {
-        Console.WriteLine(" update");
         UpdateCustomerModal!.CustomerDto = customerDto;
         UpdateCustomerModal.Show();
     }
@@ -102,8 +115,6 @@
     
     private async Task ShowDeleteCustomerConfirmationDialog(int? id)
     {
-        Console.WriteLine(" del");
-
         var options = new ConfirmDialogOptions { Size = DialogSize.Small };
 
         var confirmation = await DeleteCustomerConfirmDialog.ShowAsync(

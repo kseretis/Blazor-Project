@@ -1,10 +1,12 @@
 using BlazorApp.Interfaces;
 using BlazorApp.Shared.Dtos;
 using BlazorApp.Shared.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorApp.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")] 
 public class CustomerController : ControllerBase
