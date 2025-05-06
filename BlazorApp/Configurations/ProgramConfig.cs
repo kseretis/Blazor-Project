@@ -1,0 +1,71 @@
+using BlazorApp.Client.Services;
+using BlazorApp.Data;
+using BlazorApp.Interfaces;
+using BlazorApp.Repositories;
+using BlazorApp.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+
+namespace BlazorApp.Configurations;
+
+public static class ProgramConfig
+{
+    public static string GetBaseUrl(this ConfigurationManager configuration)
+    {
+        return configuration["ASPNETCORE_URLS"]!;
+    }
+    
+    public static void ConfigureIdentityServer(this IServiceCollection services)
+    {
+        services.AddIdentityServer()
+            .AddDeveloperSigningCredential()
+            .AddInMemoryClients(Clients.Get())
+            .AddInMemoryApiScopes(ApiScopes.Get())
+            .AddInMemoryApiResources(ApiResources.Get())
+            // .AddInMemoryIdentityResources(IdentityResources.Get())
+            .AddTestUsers(TestUsers.Users);
+    }
+
+    public static void ConfigureApiSecurity(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.Authority = configuration.GetBaseUrl();
+                options.Audience = "api";
+                options.RequireHttpsMetadata = false;
+                // options.TokenValidationParameters = new TokenValidationParameters
+                // {
+                //     ValidateAudience = false
+                // };
+            });
+        
+        services.AddAuthorization();
+    }
+
+    public static void ConfigureDatabase(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+    }
+
+    public static void ConfigureRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<CustomerRepository>();
+    }
+
+    public static void ConfigureHttpClient(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        services.AddHttpClient("MyHttpClient", client =>
+        {
+            client.BaseAddress = new Uri(configuration.GetBaseUrl());
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
+    }
+
+    public static void ConfigureServices(this IServiceCollection services)
+    {
+        services.AddSingleton<WeatherForecastService>();
+        services.AddScoped<ICustomerService, CustomerService>();
+        services.AddScoped<CustomerApiService>();
+    }
+}

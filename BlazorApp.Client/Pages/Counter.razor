@@ -1,5 +1,7 @@
 ﻿@page "/counter"
+@using Microsoft.AspNetCore.Authorization
 @rendermode InteractiveAuto
+@attribute [Authorize]
 
 <PageTitle>Counter</PageTitle>
 

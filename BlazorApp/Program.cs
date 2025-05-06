@@ -1,10 +1,5 @@
-using BlazorApp.Client.Services;
 using BlazorApp.Components;
-using BlazorApp.Data;
-using BlazorApp.Interfaces;
-using BlazorApp.Repositories;
-using BlazorApp.Services;
-using Microsoft.EntityFrameworkCore;
+using BlazorApp.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
@@ -13,16 +8,19 @@ var services = builder.Services;
 services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
-
-services.AddLogging();
 services.AddBlazorBootstrap();
+services.AddLogging();
 
-ConfigureHttpClient();
-ConfigureDatabase();
-ConfigureRepositories();
-ConfigureServices();
+services.ConfigureHttpClient(builder.Configuration);
+services.ConfigureDatabase(builder.Configuration);
+services.ConfigureIdentityServer();
+services.ConfigureApiSecurity(builder.Configuration);
+services.ConfigureRepositories();
+services.ConfigureServices();
 
 services.AddControllers();
+services.AddAuthentication();
+services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -39,42 +37,16 @@ else
 }
 
 app.UseHttpsRedirection();
-
 app.UseStaticFiles();
 app.UseAntiforgery();
-app.MapControllers();
+app.UseIdentityServer();
+app.UseAuthentication();
+app.UseAuthorization();
 
+app.MapControllers();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorApp.Client._Imports).Assembly);
 
 app.Run();
-
-
-void ConfigureDatabase()
-{
-    builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-}
-
-void ConfigureRepositories()
-{
-    services.AddScoped<CustomerRepository>();
-}
-
-void ConfigureHttpClient()
-{
-    services.AddHttpClient("MyHttpClient", client =>
-    {
-        client.BaseAddress = new Uri(builder.Configuration["ASPNETCORE_URLS"]!); // localhostUrl
-        client.Timeout = TimeSpan.FromSeconds(30);
-    });
-}
-
-void ConfigureServices()
-{
-    services.AddSingleton<WeatherForecastService>();
-    services.AddScoped<ICustomerService, CustomerService>();
-    services.AddScoped<CustomerApiService>();
-}
-
