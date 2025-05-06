@@ -12,9 +12,9 @@ public static class Clients
         {
             ClientId = "blazor-app",
             ClientName = "Blazor App",
-            AllowedGrantTypes = GrantTypes.Code,
+            AllowedGrantTypes = GrantTypes.ClientCredentials,
             ClientSecrets = { new Secret("secret".Sha256()) },
-            AllowedScopes = {"read", "write", "delete"},
+            AllowedScopes = {"api"},
         }
     };
 }
@@ -23,9 +23,7 @@ public static class ApiScopes
 {
     public static IEnumerable<ApiScope> Get() => new List<ApiScope>
     {
-        new ("read", "Read access to API"),
-        new ("write", "Write access to API"),
-        new ("delete", "Delete access to API")
+        new ("api", "Access to API"),
     };
 }
 
@@ -33,15 +31,6 @@ public static class ApiResources
 {
     public static IEnumerable<ApiResource> Get() => new List<ApiResource>
     {
-        new ("api", "BlazorApp API") { Scopes = { "read", "write", "delete" } }
-    };
-}
-
-public static class IdentityResources
-{
-    public static IEnumerable<IdentityResource> Get() => new List<IdentityResource>
-    {
-        new DIdentityResources.OpenId(),
-        new DIdentityResources.Profile(),
+        new ("api", "BlazorApp API") { Scopes = { "api" } }
     };
 }

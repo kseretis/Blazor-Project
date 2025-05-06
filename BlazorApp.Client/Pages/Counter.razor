@@ -1,7 +1,7 @@
 ﻿@page "/counter"
-@using Microsoft.AspNetCore.Authorization
+@using BlazorApp.Client.Services
 @rendermode InteractiveAuto
-@attribute [Authorize]
+@inject TokenService TokenService;
 
 <PageTitle>Counter</PageTitle>
 
@@ -13,7 +13,7 @@
 
 @code {
     private int currentCount = 0;
-
+    
     private void IncrementCount()
     {
         currentCount++;

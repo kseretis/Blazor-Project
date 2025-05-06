@@ -16,11 +16,10 @@ services.ConfigureDatabase(builder.Configuration);
 services.ConfigureIdentityServer();
 services.ConfigureApiSecurity(builder.Configuration);
 services.ConfigureRepositories();
-services.ConfigureServices();
+services.ConfigureFrontendServices();
+services.ConfigureBackendServices();
 
 services.AddControllers();
-services.AddAuthentication();
-services.AddAuthorization();
 
 var app = builder.Build();
 

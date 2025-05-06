@@ -34,10 +34,6 @@ public static class ProgramConfig
                 options.Authority = configuration.GetBaseUrl();
                 options.Audience = "api";
                 options.RequireHttpsMetadata = false;
-                // options.TokenValidationParameters = new TokenValidationParameters
-                // {
-                //     ValidateAudience = false
-                // };
             });
         
         services.AddAuthorization();
@@ -62,10 +58,15 @@ public static class ProgramConfig
         });
     }
 
-    public static void ConfigureServices(this IServiceCollection services)
+    public static void ConfigureFrontendServices(this IServiceCollection services)
+    {
+        services.AddScoped<TokenService>();
+        services.AddScoped<CustomerApiService>();
+    }
+    
+    public static void ConfigureBackendServices(this IServiceCollection services)
     {
         services.AddSingleton<WeatherForecastService>();
         services.AddScoped<ICustomerService, CustomerService>();
-        services.AddScoped<CustomerApiService>();
     }
 }
