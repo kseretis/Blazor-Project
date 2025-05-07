@@ -37,6 +37,18 @@ dotnet ef database update
 
 Σε όλο τον κώδικα υπάρχουν σχόλια για καλύτερη κατανόηση.
 
+`/customers`
+
+![img.png](img.png)
+
+`updatecustomermodal`
+
+![img_1.png](img_1.png)
+
+`/newcustomer`
+
+![img_2.png](img_2.png)
+
 ## Duende IdentityServer
 
 Για την ασφάλεια της εφαρμογής χρησιμοποιήθηκε το ****Duende IdentityServer****. Έχει γίνει setup στην backend εφαρμογή. Το API είναι προστατευμένο και χρειάζεται authentication.
