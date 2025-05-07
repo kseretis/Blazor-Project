@@ -56,6 +56,68 @@ namespace BlazorApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "123 Elm St",
+                            City = "Metropolis",
+                            CompanyName = "Acme Corp",
+                            ContactName = "John Doe",
+                            Country = "USA",
+                            Phone = "555-1234",
+                            PostalCode = "12345",
+                            Region = "NA"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "456 Oak St",
+                            City = "Springfield",
+                            CompanyName = "Globex Inc",
+                            ContactName = "Jane Smith",
+                            Country = "USA",
+                            Phone = "555-5678",
+                            PostalCode = "67890",
+                            Region = "NA"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "789 Pine St",
+                            City = "Capital City",
+                            CompanyName = "Initech",
+                            ContactName = "Bill Lumbergh",
+                            Country = "USA",
+                            Phone = "555-9012",
+                            PostalCode = "11223",
+                            Region = "NA"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Address = "321 Maple St",
+                            City = "Raccoon City",
+                            CompanyName = "Umbrella Corp",
+                            ContactName = "Alice Abernathy",
+                            Country = "USA",
+                            Phone = "555-3456",
+                            PostalCode = "44556",
+                            Region = "NA"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Address = "654 Cedar St",
+                            City = "Gotham",
+                            CompanyName = "Wayne Enterprises",
+                            ContactName = "Bruce Wayne",
+                            Country = "USA",
+                            Phone = "555-7890",
+                            PostalCode = "77889",
+                            Region = "NA"
+                        });
                 });
 #pragma warning restore 612, 618
         }

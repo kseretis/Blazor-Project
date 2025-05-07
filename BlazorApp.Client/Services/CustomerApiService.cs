@@ -8,47 +8,45 @@ public class CustomerApiService
 {
     private const string ApiPrefixUrl = "api/";
     private const string CustomerApiSuffix = "Customer";
-
-    private readonly ILogger<CustomerApiService> _logger;
-    private readonly IHttpClientFactory _httpClientFactory;
+    
+    private readonly HttpClient _httpClient;
     private readonly TokenService _tokenService;
     
-    public CustomerApiService(IHttpClientFactory httpClientFactory, TokenService tokenService, ILogger<CustomerApiService> logger)
+    public CustomerApiService(HttpClient httpClient, TokenService tokenService)
     {
-        _httpClientFactory = httpClientFactory;
+        _httpClient = httpClient;
         _tokenService = tokenService;
-        _logger = logger;
     }
     
     public async Task<IEnumerable<CustomerDto>> GetCustomersAsync()
     {
-        var httpClient = await CreateHttpClient();
+        await SetupBearerAccessToken();
         
-        return await httpClient.GetFromJsonAsync<IEnumerable<CustomerDto>>(
-            $"{httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}") ?? [];
+        return await _httpClient.GetFromJsonAsync<IEnumerable<CustomerDto>>(
+            $"{_httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}") ?? [];
     }
 
     public async Task<CustomerDto?> GetCustomerAsync(string id)
     {
-        var httpClient = await CreateHttpClient();
+        await SetupBearerAccessToken();
 
-        return await httpClient.GetFromJsonAsync<CustomerDto>($"{httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}/{id}");
+        return await _httpClient.GetFromJsonAsync<CustomerDto>($"{_httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}/{id}");
     }
     
     public async Task<bool> AddCustomerAsync(CustomerDto customerDto)
     {
-        var httpClient = await CreateHttpClient();
+        await SetupBearerAccessToken();
         
-        var response = await httpClient.PostAsJsonAsync($"{httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}", customerDto);
+        var response = await _httpClient.PostAsJsonAsync($"{_httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}", customerDto);
 
         return response.IsSuccessStatusCode;
     }
     
     public async Task UpdateCustomerAsync(CustomerDto customer)
     {
-        var httpClient = await CreateHttpClient();
+        await SetupBearerAccessToken();
         
-        var response = await httpClient.PutAsJsonAsync($"{httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}", customer);
+        var response = await _httpClient.PutAsJsonAsync($"{_httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}", customer);
 
         if (response.IsSuccessStatusCode)
         {
@@ -61,9 +59,9 @@ public class CustomerApiService
     
     public async Task DeleteCustomerAsync(int id)
     {
-        var httpClient = await CreateHttpClient();
+        await SetupBearerAccessToken();
 
-        var response = await httpClient.DeleteAsync($"{httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}/{id}");
+        var response = await _httpClient.DeleteAsync($"{_httpClient.BaseAddress}{ApiPrefixUrl}{CustomerApiSuffix}/{id}");
 
         if (response.IsSuccessStatusCode)
         {
@@ -73,23 +71,13 @@ public class CustomerApiService
         var error = await response.Content.ReadAsStringAsync();
         throw new HttpRequestException($"Error: {response.StatusCode}, Details: {error}");
     }
-
-    private async Task<HttpClient> CreateHttpClient()
-    {
-        var httpClient = _httpClientFactory.CreateClient("MyHttpClient");
-        
-        await SetupBearerAccessToken(httpClient);
-        
-        return httpClient;
-    }
     
-    
-    private async Task SetupBearerAccessToken(HttpClient httpClient)
+    private async Task SetupBearerAccessToken()
     {
         var token = await _tokenService.GetAccessTokenAsync();
         if (token is not null)
         {
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
     }
 }

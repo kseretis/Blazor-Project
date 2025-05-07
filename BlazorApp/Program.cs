@@ -11,12 +11,11 @@ services.AddRazorComponents()
 services.AddBlazorBootstrap();
 services.AddLogging();
 
-services.ConfigureHttpClient(builder.Configuration);
 services.ConfigureDatabase(builder.Configuration);
 services.ConfigureIdentityServer();
 services.ConfigureApiSecurity(builder.Configuration);
 services.ConfigureRepositories();
-services.ConfigureFrontendServices();
+services.ConfigureFrontendServices(builder.Configuration);
 services.ConfigureBackendServices();
 
 services.AddControllers();

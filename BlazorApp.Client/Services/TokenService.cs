@@ -12,17 +12,14 @@ public class TokenService
     private string ClientSecret => _configuration["TokenService:ClientSecret"]!;
     private string Scope => _configuration["TokenService:Scope"]!;
     
-    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly HttpClient _httpClient;
     private readonly IConfiguration _configuration;
-    
-    private HttpClient HttpClient => _httpClientFactory.CreateClient("MyHttpClient");
-    private string BaseUrl => HttpClient.BaseAddress!.ToString();
     
     private string? AccessToken { get; set; }
 
-    public TokenService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+    public TokenService(HttpClient httpClient, IConfiguration configuration)
     {
-        _httpClientFactory = httpClientFactory;
+        _httpClient = httpClient;
         _configuration = configuration;
     }
 
@@ -38,7 +35,7 @@ public class TokenService
             Encoding.UTF8,
             "application/x-www-form-urlencoded");
         
-        var response = await HttpClient.PostAsync($"{BaseUrl}{TokenEndpointSuffix}", content);
+        var response = await _httpClient.PostAsync($"{_httpClient.BaseAddress}{TokenEndpointSuffix}", content);
 
         var responseContent = await response.Content.ReadAsStringAsync();
         

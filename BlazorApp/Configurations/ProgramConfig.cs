@@ -49,19 +49,11 @@ public static class ProgramConfig
         services.AddScoped<CustomerRepository>();
     }
 
-    public static void ConfigureHttpClient(this IServiceCollection services, ConfigurationManager configuration)
+    public static void ConfigureFrontendServices(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.AddHttpClient("MyHttpClient", client =>
-        {
-            client.BaseAddress = new Uri(configuration.GetBaseUrl());
-            client.Timeout = TimeSpan.FromSeconds(30);
-        });
-    }
 
-    public static void ConfigureFrontendServices(this IServiceCollection services)
-    {
-        services.AddScoped<TokenService>();
-        services.AddScoped<CustomerApiService>();
+        services.AddHttpClient<TokenService>(client => client.BaseAddress = new Uri(configuration.GetBaseUrl()));
+        services.AddHttpClient<CustomerApiService>(client => client.BaseAddress = new Uri(configuration.GetBaseUrl()));
     }
     
     public static void ConfigureBackendServices(this IServiceCollection services)
