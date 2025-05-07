@@ -1,8 +1,11 @@
 using BlazorApp.Models;
 using BlazorApp.Shared.Dtos;
 
-namespace BlazorApp.Shared.Extensions;
+namespace BlazorApp.Extensions;
 
+/// <summary>
+/// This class contains extension methods for converting between Customer and CustomerDto.
+/// </summary>
 public static class CustomerExtensions
 {
     public static Customer ToCustomer(this CustomerDto customerModelDto)

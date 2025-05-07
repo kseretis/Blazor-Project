@@ -4,10 +4,15 @@ using System.Text.Json.Serialization;
 
 namespace BlazorApp.Client.Services;
 
+/// <summary>
+/// This class is responsible for obtaining and managing the access token used for authentication.
+/// </summary>
 public class TokenService
 {
     private const string TokenEndpointSuffix = "connect/token";
     
+    // The following variables are used to store the configuration values for the token service.
+    // These values are stored in a secrets.json file.
     private string ClientId => _configuration["TokenService:ClientId"]!;
     private string ClientSecret => _configuration["TokenService:ClientSecret"]!;
     private string Scope => _configuration["TokenService:Scope"]!;

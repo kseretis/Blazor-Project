@@ -12,6 +12,10 @@ public class Manager
 
 public static class Solution1
 {
+    /// <summary>
+    /// Normal method call, passing the object as a parameter.
+    /// </summary>
+    /// <param name="obj"></param>
     public static void PrintName(object obj)
     {
         try
@@ -26,6 +30,11 @@ public static class Solution1
         }
     }
     
+    /// <summary>
+    /// Static method call, calling the method as extension method.
+    /// Preferable
+    /// </summary>
+    /// <param name="obj"></param>
     public static void PrintNameStatic(this object obj)
     {
         try

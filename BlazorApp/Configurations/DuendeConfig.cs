@@ -4,6 +4,9 @@ using DIdentityResources = Duende.IdentityServer.Models.IdentityResources;
 
 namespace BlazorApp.Configurations;
 
+/// <summary>
+/// This class contains configuration methods for the IdentityServer.
+/// </summary>
 public static class Clients
 {
     public static IEnumerable<DClient> Get() => new List<DClient>

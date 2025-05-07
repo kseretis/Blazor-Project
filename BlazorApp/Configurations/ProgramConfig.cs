@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Configurations;
 
+/// <summary>
+/// This class contains configuration methods for the Blazor application.
+/// </summary>
 public static class ProgramConfig
 {
     public static string GetBaseUrl(this ConfigurationManager configuration)

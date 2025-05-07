@@ -4,6 +4,10 @@ using BlazorApp.Repositories;
 
 namespace BlazorApp.Services;
 
+/// <summary>
+/// This class implements the ICustomerService interface and provides body to methods for managing customers.
+/// It is usually contains the business logic.
+/// </summary>
 public class CustomerService : ICustomerService
 {
     private readonly CustomerRepository _customerRepository;

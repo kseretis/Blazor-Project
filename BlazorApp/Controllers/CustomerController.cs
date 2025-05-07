@@ -1,11 +1,15 @@
 using BlazorApp.Interfaces;
 using BlazorApp.Shared.Dtos;
-using BlazorApp.Shared.Extensions;
+using BlazorApp.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorApp.Controllers;
 
+/// <summary>
+/// This class is a controller for managing customers. It is responsible for handling HTTP requests related to customers.
+/// It is secured with authorization.
+/// </summary>
 [Authorize]
 [ApiController]
 [Route("api/[controller]")] 
@@ -45,7 +49,7 @@ public class CustomerController : ControllerBase
             
             if (customers.Any())
             {
-                return Ok(customers.Select(c => c.ToCustomerDto()));
+                return Ok(customers.ToCustomerDtoList());
             }
             
             return NotFound("No customers found");

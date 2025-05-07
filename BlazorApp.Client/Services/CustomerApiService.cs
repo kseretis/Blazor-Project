@@ -4,6 +4,9 @@ using BlazorApp.Shared.Dtos;
 
 namespace BlazorApp.Client.Services;
 
+/// <summary>
+/// This class is responsible for making API calls related to customers.
+/// </summary>
 public class CustomerApiService
 {
     private const string ApiPrefixUrl = "api/";
@@ -72,6 +75,10 @@ public class CustomerApiService
         throw new HttpRequestException($"Error: {response.StatusCode}, Details: {error}");
     }
     
+    /// <summary>
+    /// This method sets up the Bearer token for authorization in the HTTP client.
+    /// Not the best approach, but it works for our case.
+    /// </summary>
     private async Task SetupBearerAccessToken()
     {
         var token = await _tokenService.GetAccessTokenAsync();

@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Repositories;
 
+/// <summary>
+/// This class is responsible for data access operations related to customers.
+/// </summary>
 public class CustomerRepository
 {
     private readonly AppDbContext _dbContext;

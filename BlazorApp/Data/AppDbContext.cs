@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazorApp.Data;
 
+/// <summary>
+/// This class represents the database context for the Blazor application.
+/// </summary>
+/// <param name="options"></param>
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<Customer> Customers { get; set; }
@@ -11,6 +15,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     {
         base.OnModelCreating(modelBuilder);
         
+        /*
+         * This method is used to add some initial data to the database.
+         */
         modelBuilder.Entity<Customer>().HasData(
             new Customer { Id = 1, CompanyName = "Acme Corp", ContactName = "John Doe", Address = "123 Elm St", 
                 City = "Metropolis", Region = "NA", PostalCode = "12345", Country = "USA", Phone = "555-1234" },

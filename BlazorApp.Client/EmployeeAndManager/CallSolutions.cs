@@ -28,12 +28,12 @@ public static class CallSolutions
     
     public static void PrintNameSolution2()
     {
-        var employee = new BlazorApp.Client.EmployeeAndManager.Sol2.Employee()
+        var employee = new Sol2.Employee()
         {
             Name = "John Employee Doe"
         };
         
-        var manager = new BlazorApp.Client.EmployeeAndManager.Sol2.Manager()
+        var manager = new Sol2.Manager()
         {
             Name = "John Manager Doe"
         };

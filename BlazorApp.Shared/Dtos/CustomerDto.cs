@@ -2,6 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BlazorApp.Shared.Dtos;
 
+/// <summary>
+/// This class represents a Data Transfer Object (DTO) for a customer.
+/// We avoid using the Entity Framework model directly in the API to prevent exposing the database structure.
+/// </summary>
 public class CustomerDto
 {
     public int? Id { get; set; }
