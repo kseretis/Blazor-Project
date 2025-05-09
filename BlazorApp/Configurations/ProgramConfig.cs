@@ -17,7 +17,7 @@ public static class ProgramConfig
     {
         return configuration["ASPNETCORE_URLS"]!;
     }
-    
+
     public static void ConfigureIdentityServer(this IServiceCollection services)
     {
         services.AddIdentityServer()
@@ -38,13 +38,14 @@ public static class ProgramConfig
                 options.Audience = "api";
                 options.RequireHttpsMetadata = false;
             });
-        
+
         services.AddAuthorization();
     }
 
     public static void ConfigureDatabase(this IServiceCollection services, ConfigurationManager configuration)
     {
-        services.AddDbContext<AppDbContext>(options => options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
     }
 
     public static void ConfigureRepositories(this IServiceCollection services)
@@ -54,11 +55,10 @@ public static class ProgramConfig
 
     public static void ConfigureFrontendServices(this IServiceCollection services, ConfigurationManager configuration)
     {
-
         services.AddHttpClient<TokenService>(client => client.BaseAddress = new Uri(configuration.GetBaseUrl()));
         services.AddHttpClient<CustomerApiService>(client => client.BaseAddress = new Uri(configuration.GetBaseUrl()));
     }
-    
+
     public static void ConfigureBackendServices(this IServiceCollection services)
     {
         services.AddSingleton<WeatherForecastService>();

@@ -56,8 +56,8 @@ dotnet ef database update
 
 ## Employee & Manager
 
-Σχετικά με το πρόβλημα **Employee & Manager**, δημιουργήθηκαν 2 λύσεις και βρίσκονται στα αρχεία ***Solution1.cs*** και ***Solution2.cs***, στο BlazorApp.Client/EmployeeAndManager.
-Στην κλάση ***CallSolutions.cs*** υπάρχουν οι κλήσεις των 2 λύσεων και η εκτύπωση των αποτελεσμάτων στην κονσόλα.
+Σχετικά με το πρόβλημα **Employee & Manager**, δημιουργήθηκαν 3 λύσεις και βρίσκονται στα αρχεία ***Solution1.cs***, ***Solution2.cs*** και ***Solution3.cs***, στο BlazorApp.Client/EmployeeAndManager.
+Στην κλάση ***CallSolutions.cs*** υπάρχουν οι κλήσεις των 3 λύσεων και η εκτύπωση των αποτελεσμάτων στην κονσόλα.
 
 ## Επεκτάσεις
 

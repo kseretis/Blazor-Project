@@ -1,5 +1,6 @@
 using BlazorApp.Client.EmployeeAndManager.Sol1;
 using BlazorApp.Client.EmployeeAndManager.Sol2;
+using BlazorApp.Client.EmployeeAndManager.Sol3;
 
 namespace BlazorApp.Client.EmployeeAndManager;
 
@@ -49,5 +50,22 @@ public static class CallSolutions
         // or we can print with the normal PrintName method
         Solution1.PrintName(employee);
         Solution1.PrintName(manager);
+    }
+
+    public static void PrintNameSolution3()
+    {
+        var employee = new Sol3.Employee()
+        {
+            Name = "John Employee Doe"
+        };
+        
+        var manager = new Sol3.Manager()
+        {
+            Name = "John Manager Doe"
+        };
+        
+        // print name using interfaces
+        Solution3.PrintName(employee);
+        Solution3.PrintName(manager);
     }
 }
