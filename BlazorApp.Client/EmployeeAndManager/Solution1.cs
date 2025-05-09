@@ -32,7 +32,6 @@ public static class Solution1
     
     /// <summary>
     /// Static method call, calling the method as extension method.
-    /// Preferable
     /// </summary>
     /// <param name="obj"></param>
     public static void PrintNameStatic(this object obj)
